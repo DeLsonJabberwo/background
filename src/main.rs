@@ -38,6 +38,7 @@ fn main() {
             println!("{0: <25} {1: <35}", file_stem, file_name);
         }
         println!("");
+        image = set_current();
     } else {
         image = std::env::args().nth(1).unwrap();
     }
@@ -62,6 +63,21 @@ fn main() {
     let mut current = File::create(current_path).unwrap();
     current.write_all(image.as_bytes()).unwrap();
 
+}
+
+// I don't love this, but it works to fix the error and it's probably good enough for now.
+// Might want to make it a bit more universal or portable later, though.
+fn set_current() -> String {
+    let home = env::var("HOME").unwrap();
+    let current_path = home.clone() + "/.background/current.txt";
+    let mut image: String = "".to_string();
+
+    let current = File::open(&current_path).unwrap();
+    let lines = std::io::BufReader::new(current).lines();
+    for line in lines {
+        image = line.unwrap();
+    }
+    return image;
 }
 
 fn find_file(dir: &Path, file: &String) -> String {
