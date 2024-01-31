@@ -5,9 +5,10 @@ This tool allows the user to easily change their desktop background from any loc
 Add images and rename inside of the directory specified in the `$HOME/.background/conf.json` file in the `images_dir` item.
 Use the following command to change the background from any location:
   ```
-  background {name}
+  background {name|arg}
   ```
 - Replace `{name}` with the name of the image, with or without the file extension.
+- Or replace `{arg}` with `--list` or `--ls` to get a list of files in the backgrounds directory.
 - Or run with no arguments to reuse the last image set with the command.
 ## Installation
 1. Download the background-install.sh file, either from the link below or using the following command:
