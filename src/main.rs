@@ -1,6 +1,7 @@
 use std::process::Command;
 use std::path::Path;
 use std::fs::File;
+use std::fs::read_dir;
 use std::collections::HashMap;
 use std::io::BufRead;
 use std::io::Write;
@@ -12,6 +13,12 @@ fn main() {
 
     let mut image: String = "".to_string();
 
+    let conf_file_path = home.clone() + "/.background/conf.json";
+    let conf_file = File::open(conf_file_path).unwrap();
+    let conf_vals: HashMap<String, String> = serde_json::from_reader(conf_file).unwrap();
+    let images_dir = conf_vals.get("images_dir").unwrap().replace("$HOME", &home);
+    let images_path = Path::new(&images_dir);
+
     let current_path = home.clone() + "/.background/current.txt";
     if std::env::args().count() == 1 || std::env::args().nth(1).unwrap() == "current" {
         let current = File::open(&current_path).unwrap();
@@ -19,15 +26,22 @@ fn main() {
         for line in lines {
             image = line.unwrap();
         }
+    } else if std::env::args().nth(1).unwrap() == "--list" || std::env::args().nth(1).unwrap() == "--ls" {
+        println!("");
+        let mut paths: Vec<_> = read_dir(&images_dir).unwrap()
+                                                        .map(|r| r.unwrap())
+                                                        .collect();
+        paths.sort_by_key(|dir| dir.path());
+        for path in paths {
+            let file_stem: String = path.path().file_stem().unwrap().to_str().unwrap().to_string();
+            let file_name: String = "[".to_string() + path.file_name().to_str().unwrap() + "]";
+            println!("{0: <25} {1: <35}", file_stem, file_name);
+        }
+        println!("");
     } else {
         image = std::env::args().nth(1).unwrap();
     }
 
-    let conf_file_path = home.clone() + "/.background/conf.json";
-    let conf_file = File::open(conf_file_path).unwrap();
-    let conf_vals: HashMap<String, String> = serde_json::from_reader(conf_file).unwrap();
-    let images_dir = conf_vals.get("images_dir").unwrap().replace("$HOME", &home);
-    let images_path = Path::new(&images_dir);
     
 
 //    let file = File::open("/home/delson/scripts/bg_key.json").unwrap();
