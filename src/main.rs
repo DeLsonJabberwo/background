@@ -48,6 +48,8 @@ fn main() {
         let image_count = paths.len();
         let random = rand::thread_rng().gen_range(0..image_count);
         image = paths[random].path().file_stem().unwrap().to_str().unwrap().to_string();
+        println!("Randomly selected image: {}", image);
+        println!("");
     } else {
         image = std::env::args().nth(1).unwrap();
     }
