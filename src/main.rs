@@ -6,6 +6,7 @@ use std::collections::HashMap;
 use std::io::BufRead;
 use std::io::Write;
 use std::env;
+use rand::Rng;
 
 fn main() {
 
@@ -20,7 +21,7 @@ fn main() {
     let images_path = Path::new(&images_dir);
 
     let current_path = home.clone() + "/.background/current.txt";
-    if std::env::args().count() == 1 || std::env::args().nth(1).unwrap() == "current" {
+    if std::env::args().count() == 1 || std::env::args().nth(1).unwrap() == "current" || std::env::args().nth(1).unwrap() == "-c" {
         let current = File::open(&current_path).unwrap();
         let lines = std::io::BufReader::new(current).lines();
         for line in lines {
@@ -39,6 +40,14 @@ fn main() {
         }
         println!("");
         image = set_current();
+    } else if std::env::args().nth(1).unwrap() == "--random" || std::env::args().nth(1).unwrap() == "--rand" || std::env::args().nth(1).unwrap() == "-r" {
+        println!("");
+        let paths: Vec<_> = read_dir(&images_dir).unwrap()
+                                                        .map(|r| r.unwrap())
+                                                        .collect();
+        let image_count = paths.len();
+        let random = rand::thread_rng().gen_range(0..image_count);
+        image = paths[random].path().file_stem().unwrap().to_str().unwrap().to_string();
     } else {
         image = std::env::args().nth(1).unwrap();
     }
