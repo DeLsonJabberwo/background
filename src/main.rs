@@ -1,3 +1,5 @@
+use core::panic;
+use std::process;
 use std::process::Command;
 use std::path::Path;
 use std::fs::File;
@@ -64,6 +66,10 @@ fn main() {
 //        }
 //    }
     let image = find_file(&images_path, &image);
+    if image == "" {
+        println!("Error: Cannot find file. Try again.");
+        process::exit(1)
+    }
 
     Command::new("feh")
         .arg("--bg-fill")
