@@ -1,0 +1,9 @@
+[submodule "background-feh"]
+	path = background-feh
+	url = https://github.com/DeLsonJabberwo/background-feh.git
+[submodule "background-way-go"]
+	path = background-way-go
+	url = https://github.com/DeLsonJabberwo/background-way-go.git
+[submodule "background-way-zig"]
+	path = background-way-zig
+	url = https://github.com/DeLsonJabberwo/background-way-zig.git
